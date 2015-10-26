@@ -1,10 +1,19 @@
 App = React.createClass({
 	mixins: [ReactMeteorData],
 	getMeteorData(){
-		return {
-			stats: Stats.find().fetch(),
-			metrics: Object.keys(Stats.findOne({},{filter: {_id: 0, time:0}})).concat(['rlag','rwin'])
+		if(Stats.findOne() != null && Rlag.findOne() != null && Rwin.findOne() != null){
+			return {
+				stats: Stats.find().fetch(),
+				metrics: Object.keys(Stats.findOne({},{filter: {_id: 0, time:0}})).concat(['rlag','rwin'])
+			}
 		}
+		else{
+			return {
+				status: [],
+				metrics: []
+				};
+		}
+		
 	},
 	getInitialState: function() {
 		return {

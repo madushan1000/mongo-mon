@@ -63,5 +63,5 @@ if(Meteor.isServer) {
 		
 	}
 	//poller();
-	Meteor.setInterval(poller,3000);
+	Meteor.setInterval(poller,60000);
 }
