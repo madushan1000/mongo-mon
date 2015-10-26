@@ -55,13 +55,13 @@ if(Meteor.isServer) {
 		//ow = dbl.collection('oplog.rs').findOne({}).sort({natural: -1});
 		ow = LocalCol.find({},{sort: {$natural: 1}, limit: 1}).fetch()[0];
 		//console.log(ow);
-		//Rwin.insert({
-		//	time: new Date(),
-		//	window: new Date()
-			//});
+		Rwin.insert({
+			time: new Date(),
+			window: new Date() - ow.ts.high_,
+			});
 		console.log(new Date() - ow.ts.high_)
 		
 	}
 	//poller();
-	//XSMeteor.setInterval(poller,3000);
+	Meteor.setInterval(poller,3000);
 }

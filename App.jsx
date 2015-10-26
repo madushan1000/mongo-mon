@@ -3,16 +3,16 @@ App = React.createClass({
 	getMeteorData(){
 		return {
 			stats: Stats.find().fetch(),
-			metrics: Object.keys(Stats.findOne({},{filter: {_id: 0, time:0}}))
+			metrics: Object.keys(Stats.findOne({},{filter: {_id: 0, time:0}})).concat(['rlag','rwin'])
 		}
 	},
 	getInitialState: function() {
 		return {
-			value: 'n'
+			value: 'insert'
 		}
 	},
 	getChartData(metric){
-		return ({
+		cdata =  {
 				labels: Stats.find({},{sort: {time: -1}}).map((item)=> {
 					// get total seconds between the times
 					now = new Date();
@@ -41,12 +41,28 @@ App = React.createClass({
 						strokeColor: "rgba(220,220,220,0.8)",
 						highlightFill: "rgba(220,220,220,0.75)",
 						highlightStroke: "rgba(220,220,220,1)",
-						data: Stats.find({}).fetch().map((item) => {
-							return item[metric];
-						})
+						data: []
 					}
 				]
-			});
+		};
+
+		if(metric == 'rlag'){
+			cdata.datasets[0].data = Rlag.find({}).fetch().map((item) => {
+				return item['optlag'];
+			})
+		}
+		else if(metric == 'rwin'){
+			cdata.datasets[0].data = Rwin.find({}).fetch().map((item) => {
+				return item['window'];
+			})
+		}
+		else{
+			cdata.datasets[0].data = Stats.find({}).fetch().map((item) => {
+				return item[metric];
+			})
+		}
+		return cdata;
+		
 	},
 	change: function(event){
 		this.setState({value: event.target.value});
